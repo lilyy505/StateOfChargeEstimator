@@ -1,7 +1,7 @@
 import logging
-from message import Message
-from processors.processor import Processor
-from utils import ArgumentSource
+from infra.message import Message
+from infra.processor import Processor
+from infra.utils import ArgumentSource
 import json
 
 log = logging.getLogger(__name__)
@@ -10,7 +10,7 @@ class Coloumb_Counting(Processor):
     def __init__(self, arg_source: ArgumentSource):
 
         try:
-            with open("saved_coulomb_count.json", "r") as f:
+            with open("soc/saved_coulomb_count.json", "r") as f:
                 data = json.load(f)
                 
             self.savedvalue = data['coulomb_count'] #update to read from saved json file 
