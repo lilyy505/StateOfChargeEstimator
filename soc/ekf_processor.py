@@ -24,7 +24,7 @@ class EKF_SOC_Processor(Processor):
         self._initialize_ocv_map()
         
         # 2. Persistence: Load last known state from JSON
-        self.state_file = "ekf_state.json"
+        self.state_file = "soc/ekf_state.json"
         self.load_state()
         
         # 3. Filter Parameters
@@ -37,7 +37,7 @@ class EKF_SOC_Processor(Processor):
         self.prev_used_coulombs = None 
 
     def _initialize_ocv_map(self):
-        OCV_CSV_PATH = 'processors/soc/curve-compute/processed_red_curve_data.csv'
+        OCV_CSV_PATH = 'curve-compute/processed_red_curve_data.csv'
         try:
             # Load logic exactly as seen in kalman3.py
             ocv_df = pd.read_csv(OCV_CSV_PATH)
