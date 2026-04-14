@@ -12,7 +12,7 @@ This project is structured to cleanly separate data ingestion from stateful math
 * **State Persistence:** The system continuously writes its internal state to `ekf_state.json`. In the event of a power loss or reboot on the vehicle, the EKF can resume estimation seamlessly without resetting to 0%.
 * **Modular Pipeline:** Built around a standard `Processor` interface, allowing new telemetry parsers to be added without touching the core mathematical models.
 
-## 🚀 Quick Start
+## Quick Start
 
 **1. Install Dependencies**
 ```bash
