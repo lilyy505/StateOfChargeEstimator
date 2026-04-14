@@ -19,7 +19,7 @@ SECONDS_PER_HOUR = 3600.0
 R0_PACK_OHMS = 25.0 / 1000 * 34 / 12 
 R1_PACK_OHMS = 0.0601 
 C1_PACK_FARAD = 25.5 
-OCV_CSV_PATH = 'curve-compute/processed_red_curve_data.csv'
+OCV_CSV_PATH = 'soc/curve-compute/processed_red_curve_data.csv'
 
 class EKF_SOCEstimator:
     """The 'Brain' - logic moved into a helper class for the Processor"""
