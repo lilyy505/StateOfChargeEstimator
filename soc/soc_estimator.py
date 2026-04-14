@@ -1,21 +1,24 @@
 import math
+import logging
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
-from typing import override
 
 from infra.utils import ArgumentSource
 from infra.message import Message
-from infra.processors.processor import Processor
+from infra.processor import Processor
 
-# --- Configuration (Merged from both files) ---
+log = logging.getLogger(__name__)
+
+
+# Configuration (Merged from both files)
 CELL_CAPACITY_AH = 3.5 
 PARALLEL_STRINGS = 12
 SERIES_CELLS = 34
 PACK_CAPACITY_AH = CELL_CAPACITY_AH * PARALLEL_STRINGS # 42.0 Ah
 SECONDS_PER_HOUR = 3600.0
 
-# --- Parameters (From simulation file) ---
+# Parameters (From simulation file) 
 R0_PACK_OHMS = 25.0 / 1000 * 34 / 12 
 R1_PACK_OHMS = 0.0601 
 C1_PACK_FARAD = 25.5 
@@ -118,39 +121,5 @@ class SOCEstimator(Processor):
             
             # Optional: Clean up the temporary key so it doesn't stay in the pipeline
             # del msg.data['internal_soc_val']
-            """
-            # Assuming Message has .current_ma, .voltage_v, and .timestamp
-            current_a = -msg.current_ma / 1000.0  # Sign correction from your simulation
-            voltage_v = msg.voltage_v
-            
-            # ... inside the loop ...
-            msg.soc_percent = soc_estimate
-            print(f"Time: {msg.timestamp} | Voltage: {voltage_v:.2f}V | Estimated SOC: {soc_estimate:.2f}%")
-            self.last_timestamp = msg.timestamp
-            
-            # Initialize EKF on the first message
-            if self.ekf is None:
-                # Initial guess: assume V = OCV - I*R0
-                init_ocv = voltage_v + current_a * R0_PACK_OHMS
-                # We need the inverse mapping here (Voltage -> SOC)
-                # For simplicity, starting at 100% or calculating inverse:
-                init_soc = 100.0 # Or implement ocv_to_soc_interp
-                self.ekf = EKF_SOCEstimator(init_soc, 0.0, self.soc_to_ocv_interp)
-                self.last_timestamp = msg.timestamp
-                continue
-
-            if self.last_timestamp:
-                dt = (msg.timestamp - self.last_timestamp).total_seconds()
-            else:
-                dt = 0.5 # Default fallback
-            
-            self.ekf.predict(current_a, dt)
-            soc_estimate = self.ekf.correct(voltage_v)
-            
-            # Update the message with the new SOC
-            msg.soc_percent = soc_estimate
-            self.last_timestamp = msg.timestamp
-        """
-        # print(soc_estimate)
-        #print(msg.soc_percent)
+        
         return messages + output_messages

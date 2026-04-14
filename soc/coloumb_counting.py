@@ -1,4 +1,5 @@
 import logging
+import os
 from infra.message import Message
 from infra.processor import Processor
 from infra.utils import ArgumentSource
@@ -7,6 +8,18 @@ import json
 log = logging.getLogger(__name__)
 
 class Coloumb_Counting(Processor): 
+    
+    """
+    Tracks cumulative Coulomb count from the Riedon sensor and adjusts it
+    to survive controller restarts.
+ 
+    The hardware outputs a value in Amp-seconds (Coulombs). On restart the
+    counter resets to 0, so this processor shifts the new reading by the
+    last saved value to maintain continuity.
+ 
+    Produces: calculated_values.adjusted_coulomb_count (Coulombs, float)
+    """
+    
     def __init__(self, arg_source: ArgumentSource):
 
         try:
@@ -30,7 +43,6 @@ class Coloumb_Counting(Processor):
         else:
             return current_coulomb_count
 
-        
     
     def get_count_shutoff(self, current_coulomb_count: int) -> int:
 
@@ -69,14 +81,6 @@ class Coloumb_Counting(Processor):
                     log.warning("Not converting to updated coulumb count, because the coulomb count data wasn't an integer") 
                     continue
 
-                # if statement checking if I need to shift the coulomb count
-
-                '''if current_coulomb_count == 0:
-                    updated_coulomb_count: int = self.shift_coulomb_count(current_coulomb_count)
-                else:
-                    updated_coulomb_count: int = self.check_outlier(current_coulomb_count)
-                    self.lastvalue = updated_coulomb_count
-                '''
                 # updated_coulomb_count: int = self.check_outlier(current_coulomb_count)
                 #self.lastvalue = updated_coulomb_count
 

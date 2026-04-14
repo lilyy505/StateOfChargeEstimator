@@ -1,9 +1,6 @@
 from typing import Any
 import pyjson5
 import os
-from interpret import CanInterpreter
-
-
 
 def parse_json5(json_file: str) -> Any:
     def replace_includes(obj: Any) -> Any:
@@ -37,9 +34,8 @@ class ModuleLoadException(Exception):
         self.source = source
 
 class ArgumentSource:
-    def __init__(self, parsed_json: Any, can_interpreter: CanInterpreter, resource_name: str):
+    def __init__(self, parsed_json: Any, resource_name: str):
         self.parsed_json = parsed_json
-        self.can_interpreter = can_interpreter
         self.resource_name = resource_name
 
     def get_arg(self, name: str, t: type, /, prompt_if_missing: bool = True) -> Any:
@@ -142,34 +138,3 @@ def prompt_for_yes_or_no(text: str) -> bool:
         else:
             print("Please enter 'y' or 'n'.")
 
-# logging.basicConfig(format='[%(asctime)s]%(levelname)-7s:%(name)s: %(message)s', datefmt='%m/%d/%y %H:%M:%S', level="DEBUG")
-# class Log(object):
-#     MAGENTA = '\033[95m'
-#     BLUE = '\033[94m'
-#     GREEN = '\033[92m'
-#     YELLOW = '\033[93m'
-#     RED = '\033[91m'
-#     GREY = '\033[0m'  # normal
-#     ENDC = '\033[0m'
-
-
-#     def __init__(self, name):
-#         self.logger = logging.getLogger(name)
-#         self.extra={'logger_name': name, 'endColor': self.ENDC, 'color': self.GREEN}
-
-
-#     def info(self, msg):
-#         self.extra['color'] = self.GREY
-#         self.logger.info(msg, extra=self.extra)
-
-#     def debug(self, msg):
-#         self.extra['color'] = self.BLUE
-#         self.logger.debug(msg, extra=self.extra)
-
-#     def warning(self, msg):
-#         self.extra['color'] = self.YELLOW
-#         self.logger.warning(msg, extra=self.extra)
-
-#     def error(self, msg):
-#         self.extra['color'] = self.RED
-#         self.logger.error(msg, extra=self.extra)

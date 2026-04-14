@@ -1,8 +1,13 @@
 # Serial communication for telemetry simulator
 pyserial==3.5
-
-# Math and state estimation 
+ 
+# Math and state estimation
 numpy>=1.24.0
-
+scipy>=1.11.0
+ 
 # Data handling for CSVs
 pandas>=2.0.0
+ 
+# JSON5 config parsing
+pyjson5>=1.6.0
+ 

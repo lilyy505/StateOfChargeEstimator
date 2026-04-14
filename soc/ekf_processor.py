@@ -4,9 +4,12 @@ from scipy.interpolate import interp1d
 import json
 import os
 import math
+import logging
 from infra.message import Message
 from infra.processor import Processor
 from infra.utils import ArgumentSource
+
+log = logging.getLogger(__name__)
 
 # --- Physical Constants from kalman3.py ---
 CELL_CAPACITY_AH = 3.5 
@@ -117,26 +120,6 @@ class EKF_SOC_Processor(Processor):
                     self.prev_used_coulombs = used_coulombs
                     self.last_timestamp = now
 
-                '''# Trigger Prediction on Current Update
-                if msg.telem_name == 'riedon_current_mA':
-                current_A = -msg.data['value'] / 1000.0 
-                
-                now = msg.timestamp
-                dt = (now - self.last_timestamp).total_seconds() if self.last_timestamp else 0.5
-                self.last_timestamp = now
-
-                # Predict State
-                A_rc = math.exp(-dt / (R1_PACK_OHMS * C1_PACK_FARAD))
-                B_rc = R1_PACK_OHMS * (1 - A_rc)
-                
-                self.x[0, 0] -= (current_A * dt) / (PACK_CAPACITY_AH * SECONDS_PER_HOUR)
-                self.x[1, 0] = self.x[1, 0] * A_rc + current_A * B_rc
-                
-                # Update Covariance
-                A_jac = np.array([[1.0, 0.0], [0.0, A_rc]])
-                self.P = A_jac @ self.P @ A_jac.T + self.Q
-                self.last_current = current_A
-                '''
 
             # Trigger Correction on Voltage Update
             elif msg.telem_name == 'bms.pack_voltage_V':
@@ -158,13 +141,7 @@ class EKF_SOC_Processor(Processor):
                 self.P = (np.eye(2) - K @ C_jac) @ self.P
                 
                 self.save_state()
-                
-                """
-                soc_val = float(self.x[0, 0] * 100.0)
-                print(f"EKF output SOC = {soc_val:.2f}%")
-                output_messages.append(Message(0x3F3, {"value": soc_val}, msg.timestamp, "soc_ekf"))
-                #output_messages.append(Message(0x3F3, {"soc_ekf": self.x[0, 0] * 100}, msg.timestamp, 'output'))
-                """
+            
                 msg.data['internal_soc_val'] = float(self.x[0, 0] * 100.0)    
 
-        return messages #+ output_messages
+        return messages     
