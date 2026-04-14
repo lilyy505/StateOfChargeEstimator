@@ -4,9 +4,9 @@ import pandas as pd
 from scipy.interpolate import interp1d
 from typing import override
 
-from utils import ArgumentSource
-from message import Message
-from processors.processor import Processor
+from infra.utils import ArgumentSource
+from infra.message import Message
+from infra.processors.processor import Processor
 
 # --- Configuration (Merged from both files) ---
 CELL_CAPACITY_AH = 3.5 
