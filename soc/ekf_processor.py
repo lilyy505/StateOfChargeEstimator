@@ -37,7 +37,7 @@ class EKF_SOC_Processor(Processor):
         self.prev_used_coulombs = None 
 
     def _initialize_ocv_map(self):
-        OCV_CSV_PATH = 'curve-compute/processed_red_curve_data.csv'
+        OCV_CSV_PATH = 'soc/curve-compute/processed_red_curve_data.csv'
         try:
             # Load logic exactly as seen in kalman3.py
             ocv_df = pd.read_csv(OCV_CSV_PATH)
